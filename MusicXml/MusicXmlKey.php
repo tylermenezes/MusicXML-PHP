@@ -12,6 +12,8 @@
 		public $a = MIDI_NOTE_NATURAL;
 		public $b = MIDI_NOTE_NATURAL;
 
+		private $isMajor = false;
+
 		private $flatNoteOrder = array(&$this->b, &$this->e, &$this->a, &$this->d, &$this->g, &$this->c, &$this->f);
 		private $sharpNoteOrder = array(&$this->f, &$this->c, &$this->g, &$this->d, &$this->a, &$this->e, &$this->b);
 
@@ -22,6 +24,8 @@
 				$flats = -7;
 			}
 
+			$this->isMajor = $isMajor;
+
 			for($i = abs($flats); $i > 0; $i--){
 				if($flats > 0){
 					assignNoteFlat($i);
@@ -31,35 +35,39 @@
 			}
 		}
 
-		public function getActualNote($note){
+		public function GetActualNote($note){
 			return $note->ModifyNoteNumber($this->getSharpDelta($note->GetNoteName()));
 		}
 
-		private function getSharpDelta($name){
-			$delta = 0;
+		private function &getNoteByName($name){
+			$name = strtoupper($name);
 			switch($name){
 				case 'C':
-					$delta = $this->c;
+					return &$this->c;
 					break;
 				case 'D':
-					$delta = $this->d;
+					return &$this->d;
 					break;
 				case 'E':
-					$delta = $this->e;
+					return &$this->e;
 					break;
 				case 'F':
-					$delta = $this->f;
+					return &$this->f;
 					break;
 				case 'G':
-					$delta = $this->g;
+					return &$this->g;
 					break;
 				case 'A':
-					$delta = $this->a;
+					return &$this->a;
 					break;
 				case 'B':
-					$delta = $this->b;
+					return &$this->b;
 					break;
 			}
+		}
+
+		private function getSharpDelta($name){
+			return &$this->getNoteByName($name);
 		}
 
 		private function assignNoteSharp($i){
