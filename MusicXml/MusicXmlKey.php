@@ -4,13 +4,13 @@
 	define("MUSIC_NOTE_SHARP", 1);
 	class MusicXmlKey{
 
-		public $c = MIDI_NOTE_NATURAL;
-		public $d = MIDI_NOTE_NATURAL;
-		public $e = MIDI_NOTE_NATURAL;
-		public $f = MIDI_NOTE_NATURAL;
-		public $g = MIDI_NOTE_NATURAL;
-		public $a = MIDI_NOTE_NATURAL;
-		public $b = MIDI_NOTE_NATURAL;
+		public $c = MUSIC_NOTE_NATURAL;
+		public $d = MUSIC_NOTE_NATURAL;
+		public $e = MUSIC_NOTE_NATURAL;
+		public $f = MUSIC_NOTE_NATURAL;
+		public $g = MUSIC_NOTE_NATURAL;
+		public $a = MUSIC_NOTE_NATURAL;
+		public $b = MUSIC_NOTE_NATURAL;
 
 		private $isMajor = false;
 
