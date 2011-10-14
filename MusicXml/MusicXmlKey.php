@@ -4,18 +4,9 @@
 	define("MUSIC_NOTE_SHARP", 1);
 	class MusicXmlKey{
 
-		public $c = MUSIC_NOTE_NATURAL;
-		public $d = MUSIC_NOTE_NATURAL;
-		public $e = MUSIC_NOTE_NATURAL;
-		public $f = MUSIC_NOTE_NATURAL;
-		public $g = MUSIC_NOTE_NATURAL;
-		public $a = MUSIC_NOTE_NATURAL;
-		public $b = MUSIC_NOTE_NATURAL;
+		private $status = array(MUSIC_NOTE_NATURAL, MUSIC_NOTE_NATURAL, MUSIC_NOTE_NATURAL, MUSIC_NOTE_NATURAL, MUSIC_NOTE_NATURAL, MUSIC_NOTE_NATURAL, MUSIC_NOTE_NATURAL);
 
 		private $isMajor = false;
-
-		private $flatNoteOrder = array(&$this->b, &$this->e, &$this->a, &$this->d, &$this->g, &$this->c, &$this->f);
-		private $sharpNoteOrder = array(&$this->f, &$this->c, &$this->g, &$this->d, &$this->a, &$this->e, &$this->b);
 
 		public function __construct($isMajor, $flats){
 			if($flats > 7){
@@ -23,59 +14,58 @@
 			}else if($flats < -7){
 				$flats = -7;
 			}
-
 			$this->isMajor = $isMajor;
 
-			for($i = abs($flats); $i > 0; $i--){
-				if($flats > 0){
-					assignNoteFlat($i);
-				}else{
-					assignNoteSharp($i);
-				}
+			$sharps = -$flats;
+			$sign = $sharps > 0? MUSIC_NOTE_SHARP : MUSIC_NOTE_FLAT;
+
+			for($i = 0; $i < abs($sharps); $i++){
+				$this->assignNote($sign * $i * 5, $sign);
 			}
 		}
 
 		public function GetActualNote($note){
-			return $note->ModifyNoteNumber($this->getSharpDelta($note->GetNoteName()));
+			return $note->ModifyNoteNumber($this->getSharpDeltaByName($note->GetNoteName()));
 		}
 
-		private function &getNoteByName($name){
+		private function assignNote($i, $n){
+			$i = $i%7;
+			if($i < 0){
+				$i = abs(7 - $i);
+			}
+
+			$this->status[$i] = $n;
+		}
+
+		private function getNoteByName($name){
 			$name = strtoupper($name);
 			switch($name){
 				case 'C':
-					return &$this->c;
+					return $this->status[0];
 					break;
 				case 'D':
-					return &$this->d;
+					return $this->status[1];
 					break;
 				case 'E':
-					return &$this->e;
+					return $this->status[2];
 					break;
 				case 'F':
-					return &$this->f;
+					return $this->status[3];
 					break;
 				case 'G':
-					return &$this->g;
+					return $this->status[4];
 					break;
 				case 'A':
-					return &$this->a;
+					return $this->status[5];
 					break;
 				case 'B':
-					return &$this->b;
+					return $this->status[6];
 					break;
 			}
 		}
 
-		private function getSharpDelta($name){
-			return &$this->getNoteByName($name);
-		}
-
-		private function assignNoteSharp($i){
-			$this->sharpNoteOrder[$i - 1] &=  MIDI_NOTE_SHARP;
-		}
-
-		private function assignNoteFlat($i){
-			$this->flatNoteOrder[$i - 1] &= MIDI_NOTE_FLAT;
+		private function getSharpDeltaByName($name){
+			return $this->getNoteByName($name);
 		}
 	}
 ?>
